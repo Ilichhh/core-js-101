@@ -129,8 +129,12 @@ function isTriangle(a, b, c) {
  *   { top:20, left:20, width: 20, height: 20 }    =>  false
  *
  */
-function doRectanglesOverlap(/* rect1, rect2 */) {
-  throw new Error('Not implemented');
+function doRectanglesOverlap(rect1, rect2) {
+  if (rect1.left >= (rect2.left + rect2.width)
+    || rect1.top >= (rect2.top + rect2.height)
+    || (rect1.left + rect1.width) <= rect2.left
+    || (rect1.top + rect1.height) <= rect2.top) return false;
+  return true;
 }
 
 
@@ -266,8 +270,19 @@ function reverseInteger(num) {
  *   5436468789016589 => false
  *   4916123456789012 => false
  */
-function isCreditCardNumber(/* ccn */) {
-  throw new Error('Not implemented');
+function isCreditCardNumber(ccn) {
+  const arr = ccn.toString().split('');
+  let sum = 0;
+
+  for (let i = arr.length - 1; i >= 0; i -= 1) {
+    let num = +arr[i];
+    if (i % 2 === arr.length % 2) {
+      num = (num * 2 > 9) ? (num * 2 - 9) : num * 2;
+    }
+    sum += num;
+  }
+
+  return sum % 10 === 0;
 }
 
 /**
@@ -284,8 +299,10 @@ function isCreditCardNumber(/* ccn */) {
  *   10000 ( 1+0+0+0+0 = 1 ) => 1
  *   165536 (1+6+5+5+3+6 = 26,  2+6 = 8) => 8
  */
-function getDigitalRoot(/* num */) {
-  throw new Error('Not implemented');
+function getDigitalRoot(num) {
+  if (num < 10) return num;
+  const sum = num.toString().split('').reduce((acc, curr) => +acc + +curr, 0);
+  return getDigitalRoot(sum);
 }
 
 
@@ -310,8 +327,21 @@ function getDigitalRoot(/* num */) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
+function isBracketsBalanced(str) {
+  const stack = [];
+  const brackets = {
+    ']': '[',
+    '}': '{',
+    ')': '(',
+    '>': '<',
+  };
+
+  for (let i = 0; i < str.length; i += 1) {
+    if (!(str[i] in brackets)) stack.push(str[i]);
+    else if (!stack.length || brackets[str[i]] !== stack.pop()) return false;
+  }
+
+  return !stack.length;
 }
 
 
@@ -410,8 +440,22 @@ function getMatrixProduct(/* m1, m2 */) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function evaluateTicTacToePosition(position) {
+  for (let i = 0; i < 3; i += 1) {
+    if (position[i][0] === position[i][1] && position[i][1] === position[i][2] && position[i][0]) {
+      return position[i][0];
+    }
+    if (position[0][i] === position[1][i] && position[1][i] === position[2][i] && position[0][i]) {
+      return position[0][i];
+    }
+  }
+
+  if ((position[0][0] === position[1][1] && position[1][1] === position[2][2])
+    || (position[2][0] === position[1][1] && position[2][0] === position[0][2])) {
+    return position[1][1];
+  }
+
+  return undefined;
 }
 
 
